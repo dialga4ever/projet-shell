@@ -51,10 +51,14 @@ else
         fi
 
 
-        if [ "$1" = "add" ]
-        echo "i"
+        if [ "$1" = "add" ]; then
+            echo "i"
+        elif [ "$1" = "rm" ]; then
+            echo "1"
+            remove_version  $2
         else
-        echo "Error : "
+
+            echo "Error : "
         fi
     fi
 fi
@@ -67,6 +71,15 @@ create_versionSH() {
 
 
 
+
 remove_version(){
-    echo "test"
+
+    echo "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) "
+    rep=read
+    if [ "$rep" = "no" ]
+    then
+        echo "Nothing done."
+    else
+        echo "$2 is not under versioning anymore."
+    fi
 }
