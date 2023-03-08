@@ -1,5 +1,16 @@
 #!/bin/dash
 
+remove_version(){
+
+
+    read -p "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) " rep
+    if [ "$rep" = "no" ]
+    then
+        echo "Nothing done."
+    else
+        echo "$2 is not under versioning anymore."
+    fi
+}
 if [ "$1" = "--help" ] 
 then
     if [ $# -eq 1 ]
@@ -71,15 +82,3 @@ create_versionSH() {
 
 
 
-
-remove_version(){
-
-    echo "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) "
-    rep=read
-    if [ "$rep" = "no" ]
-    then
-        echo "Nothing done."
-    else
-        echo "$2 is not under versioning anymore."
-    fi
-}
