@@ -43,11 +43,14 @@ then
 else 
     if [ $# -eq 3 ] || [ $# -eq 2 ]
     then
-        if [ -f "$2" ]
+        if ! [ -f "$2" ]
         then
             echo "Error : second argument isn't a regular file" 2>&1
             echo 'Enter "./version.sh --help" for more information.' 2>&1
             exit 1
+        fi
+
+
         if [ "$1" = "add" ]
         echo "i"
         else
@@ -61,3 +64,4 @@ create_versionSH() {
     dirname $2 | cd 
     mkdir .version 2>/dev/null
 }
+IEUFGPZEUIfgbpeuizfgpZUIEFGPUQZE
