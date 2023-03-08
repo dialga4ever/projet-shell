@@ -64,4 +64,13 @@ create_versionSH() {
     dirname $2 | cd 
     mkdir .version 2>/dev/null
 }
+<<<<<<< HEAD
 IEUFGPZEUIfgbpeuizfgpZUIEFGPUQZE
+=======
+
+
+
+remove_version(){
+    echo "test"
+}
+>>>>>>> 353f48491cc3c96e2021dca18cfd0445d45ed5f0
