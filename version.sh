@@ -61,3 +61,9 @@ create_versionSH() {
     dirname $2 | cd 
     mkdir .version 2>/dev/null
 }
+
+
+
+remove_version(){
+    echo "test"
+}
