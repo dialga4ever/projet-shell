@@ -43,7 +43,7 @@ commit(){
         lastlog=$(lastlog $1)
         newlog=$(($lastlog+1))
 
-        diff -u .version/$1/lastest $1 > .version/$1/$newlog.diff
+        diff -u $1 .version/$1/lastest  > .version/$1/$newlog.diff
         cp $1 .version/$1/lastest
         
         echo "$2" > .version/$1/$newlog.log
@@ -62,7 +62,7 @@ checkout(){
         then
             if [ -f .version/$1/$2.diff ]
             then
-                patch -i .version/$1/$2.diff $1 
+                patch -u .version/$1/$2.diff $1 
                 echo "Checked out version: $2"
             else
                 echo "Error : $2 is not a valid version number" 2>&1
@@ -70,7 +70,7 @@ checkout(){
                 exit 1
             fi
         else
-            diff -u .version/$1/lastest $1 > .version/$1/lastest.diff
+            diff -u $1 .version/$1/lastest  > .version/$1/lastest.diff
             patch -u $1 .version/$1/lastest.diff
             echo "Checked out to the latest version"
         fi
