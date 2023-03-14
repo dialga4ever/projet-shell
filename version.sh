@@ -1,20 +1,86 @@
 #!/bin/dash
-create_versionSH() {
-    dirname $2 | cd 
-    mkdir .version 2>/dev/null
-}
-remove_version(){
 
 
+rm(){
     read -p "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) " rep
     if [ "$rep" = "no" ]
     then
         echo "Nothing done."
     else
-        echo "$2 is not under versioning anymore."
+        rm -rf .version/$1
+        #verifier si .version est vide
+        if [ -d .version ]
+        then
+            rmdir .version 2>/dev/null
+        fi
+        echo "$1 is not under versioning anymore."
     fi
 }
-if [ "$1" = "--help" ] 
+
+#create a folder .version fi not create in the directory of the file and create a folder with the name of $1 with inital log message
+add() {
+    mkdir -p .version/$1
+    echo "$2" > .version/$1/1.log
+    cp $1 .version/$1/lastest
+    cp $1 .version/$1/original
+}
+#get the highest number of .version/$1/ number.log
+lastlog(){
+    ls .version/$1 | grep -Eo '[0-9]+' | sort -n | tail -1
+}
+differ(){
+    diff -u .version/$1/lastest $1
+}
+commit(){
+    if [ -d .version/$1 ]
+    then
+        #compare $1 with last file
+        if cmp $1 .version/$1/lastest 2>/dev/null
+        then
+            echo "Error : $1 has been not modified since the last commit" 2>&1
+            exit 1
+        fi
+        lastlog=$(lastlog $1)
+        newlog=$(($lastlog+1))
+
+        diff -u .version/$1/lastest $1 > .version/$1/$newlog.diff
+        cp $1 .version/$1/lastest
+        
+        echo "$2" > .version/$1/$newlog.log
+        echo "Committed a new version: $newlog"
+    else
+        echo "Error : $1 is not under versioning" 2>&1
+        echo 'Enter "./version.sh --help" for more information.' 2>&1
+        exit 1
+    fi
+}
+# patch $1 to the version $2
+checkout(){
+    if [ -d .version/$1 ]
+    then
+        if [ $# -eq 3 ]
+        then
+            if [ -f .version/$1/$2.diff ]
+            then
+                patch -i .version/$1/$2.diff $1 
+                echo "Checked out version: $2"
+            else
+                echo "Error : $2 is not a valid version number" 2>&1
+                echo 'Enter "./version.sh --help" for more information.' 2>&1
+                exit 1
+            fi
+        else
+            diff -u .version/$1/lastest $1 > .version/$1/lastest.diff
+            patch -u $1 .version/$1/lastest.diff
+            echo "Checked out to the latest version"
+        fi
+    else
+        echo "Error : $1 is not under versioning" 2>&1
+        echo 'Enter "./version.sh --help" for more information.' 2>&1
+        exit 1
+    fi
+}
+if [ "$1" = "--help" ] || [ "$1" = "-h" ] || [ $# -eq 0 ]
 then
     if [ $# -eq 1 ]
     then
@@ -66,18 +132,22 @@ else
 
 
         if [ "$1" = "add" ]; then
-            echo "i"
+            add $2 $3
         elif [ "$1" = "rm" ]; then
-            echo "1"
-            remove_version  $2
+            rm  $2
+        elif [ "$1" = "commit" ] || [ "$1" = "ci" ]; then
+            commit $2 $3
+        elif [ "$1" = "diff" ]; then
+            differ $2
+        elif [ "$1" = "checkout" ] || [ "$1" = "co" ]; then
+            checkout $2 $3
+
         else
 
             echo "Error : "
         fi
     fi
 fi
-
-
 
 
 
