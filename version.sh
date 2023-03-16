@@ -1,19 +1,20 @@
 #!/bin/dash
 
 
+
 rm(){
     read -p "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) " rep
     if [ "$rep" = "no" ]
     then
         echo "Nothing done."
     else
-        rm -rf $DIR/.version/$NAME.*
+        rm -rf $DIR/.version/$BASE.*
         #verifier si .version est vide
         if [ -d $DIR/.version ]
         then
             rmdir $DIR/.version 2>/dev/null
         fi
-        echo "$NAME is not under versioning anymore."
+        echo "$1 is not under versioning anymore."
     fi
 }
 
@@ -24,9 +25,9 @@ add() {
     cp $1 $DIR/.version/$NAME.latest
     cp $1 $DIR/.version/$NAME.1
 }
-#get the highest number of $DIR/.version/$NAME/ number.log
+#get the highest number of .version/$1/ number.log
 lastlog(){
-    ls $DIR/.version/$NAME | grep -Eo '[0-9]+' | sort -n | tail -1
+    ls $DIR/.version/$NAME.* | grep -Eo '[0-9]+' | sort -n | tail -1
 }
 differ(){
     diff -u $DIR/.version/$NAME.latest $1
@@ -35,18 +36,18 @@ commit(){
     if [ -f $DIR/.version/$NAME.latest ]
     then
         #compare $1 with last file
-        if cmp $1 $DIR/.version/$NAME/lastest 2>/dev/null
+        if cmp $DIR/$NAME $DIR/.version/$NAME.latest 2>/dev/null
         then
             echo "Error : $NAME has been not modified since the last commit" 2>&1
             exit 1
         fi
-        lastlog=$(lastlog $NAME)
+        lastlog=$(lastlog)
         newlog=$(($lastlog+1))
 
-        diff -u $1 $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog.diff
+        diff -u $1 $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog
         cp $1 $DIR/.version/$NAME.latest
         
-        echo "$2" > $DIR/.version/$NAME/$newlog.log
+        echo "$2" >> $DIR/.version/$NAME.log
         echo "Committed a new version: $newlog"
     else
         echo "Error : $NAME is not under versioning" 2>&1
