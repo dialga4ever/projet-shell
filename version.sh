@@ -26,30 +26,30 @@ add() {
 }
 #get the highest number of .version/$1/ number.log
 lastlog(){
-    ls .version/$1 | grep -Eo '[0-9]+' | sort -n | tail -1
+    ls $DIR/.version/$NAME | grep -Eo '[0-9]+' | sort -n | tail -1
 }
 differ(){
-    diff -u .version/$1/lastest $1
+    diff -u $DIR/.version/$NAME/lastest $1
 }
 commit(){
-    if [ -d .version/$1 ]
+    if [ -d $DIR/.version/$NAME ]
     then
         #compare $1 with last file
-        if cmp $1 .version/$1/lastest 2>/dev/null
+        if cmp $1 $DIR/.version/$NAME/lastest 2>/dev/null
         then
-            echo "Error : $1 has been not modified since the last commit" 2>&1
+            echo "Error : $NAME has been not modified since the last commit" 2>&1
             exit 1
         fi
-        lastlog=$(lastlog $1)
+        lastlog=$(lastlog $NAME)
         newlog=$(($lastlog+1))
 
-        diff -u $1 .version/$1/lastest  > .version/$1/$newlog.diff
-        cp $1 .version/$1/lastest
+        diff -u $1 $DIR/.version/$NAME/lastest  > $DIR/.version/$NAME/$newlog.diff
+        cp $1 $DIR/.version/$NAME/lastest
         
-        echo "$2" > .version/$1/$newlog.log
+        echo "$2" > $DIR/.version/$NAME/$newlog.log
         echo "Committed a new version: $newlog"
     else
-        echo "Error : $1 is not under versioning" 2>&1
+        echo "Error : $NAME is not under versioning" 2>&1
         echo 'Enter "./version.sh --help" for more information.' 2>&1
         exit 1
     fi
