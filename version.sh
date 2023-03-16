@@ -2,22 +2,13 @@
 
 
 
-<<<<<<< HEAD
-rm(){
-=======
 supr(){
->>>>>>> 010628e (tezreszfesf)
     read -p "Are you sure you want to delete ’$NAME’ from versioning ? (yes/no) " rep
     if [ "$rep" = "no" ]
     then
         echo "Nothing done."
     else
-<<<<<<< HEAD
-        rm -rf $DIR/.version/$NAME.*
-=======
-
         rm $DIR/.version/$NAME.*
->>>>>>> 010628e (tezreszfesf)
         #verifier si .version est vide
         if [ -d $DIR/.version ]
         then
