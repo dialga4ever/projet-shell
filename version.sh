@@ -3,12 +3,12 @@
 
 
 rm(){
-    read -p "Are you sure you want to delete ’example.txt’ from versioning ? (yes/no) " rep
+    read -p "Are you sure you want to delete ’$NAME’ from versioning ? (yes/no) " rep
     if [ "$rep" = "no" ]
     then
         echo "Nothing done."
     else
-        rm -rf $DIR/.version/$BASE.*
+        rm -rf $DIR/.version/$NAME.*
         #verifier si .version est vide
         if [ -d $DIR/.version ]
         then
@@ -56,7 +56,7 @@ commit(){
     fi
 }
 # patch $1 to the version $2
-checkout(){
+checkout(){ 
     if [ -d $DIR/.version/$NAME ]
     then
         if [ $# -eq 3 ]
