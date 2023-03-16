@@ -24,7 +24,7 @@ add() {
     cp $1 $DIR/.version/$NAME.latest
     cp $1 $DIR/.version/$NAME.1
 }
-#get the highest number of .version/$1/ number.log
+#get the highest number of $DIR/.version/$NAME/ number.log
 lastlog(){
     ls $DIR/.version/$NAME | grep -Eo '[0-9]+' | sort -n | tail -1
 }
