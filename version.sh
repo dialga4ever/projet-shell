@@ -2,13 +2,22 @@
 
 
 
+<<<<<<< HEAD
 rm(){
+=======
+supr(){
+>>>>>>> 010628e (tezreszfesf)
     read -p "Are you sure you want to delete ’$NAME’ from versioning ? (yes/no) " rep
     if [ "$rep" = "no" ]
     then
         echo "Nothing done."
     else
+<<<<<<< HEAD
         rm -rf $DIR/.version/$NAME.*
+=======
+
+        rm $DIR/.version/$NAME.*
+>>>>>>> 010628e (tezreszfesf)
         #verifier si .version est vide
         if [ -d $DIR/.version ]
         then
@@ -133,12 +142,12 @@ else
 
 
         DIR=$(dirname $2)
-        BASE=$(basename $2)
+        NAME=$(basename $2)
 
         if [ "$1" = "add" ]; then
             add $2 $3
         elif [ "$1" = "rm" ]; then
-            rm  $2
+            supr  $2
         elif [ "$1" = "commit" ] || [ "$1" = "ci" ]; then
             commit $2 $3
         elif [ "$1" = "diff" ]; then
