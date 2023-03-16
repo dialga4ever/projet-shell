@@ -7,13 +7,13 @@ rm(){
     then
         echo "Nothing done."
     else
-        rm -rf $DIR/.version/$BASE.*
+        rm -rf $DIR/.version/$NAME.*
         #verifier si .version est vide
         if [ -d $DIR/.version ]
         then
             rmdir $DIR/.version 2>/dev/null
         fi
-        echo "$1 is not under versioning anymore."
+        echo "$NAME is not under versioning anymore."
     fi
 }
 
@@ -56,13 +56,13 @@ commit(){
 }
 # patch $1 to the version $2
 checkout(){
-    if [ -d .version/$1 ]
+    if [ -d $DIR/.version/$NAME ]
     then
         if [ $# -eq 3 ]
         then
-            if [ -f .version/$1/$2.diff ]
+            if [ -f $DIR/.version/$NAME/$2.diff ]
             then
-                patch -u .version/$1/$2.diff $1 
+                patch -u $DIR/.version/$NAME/$2.diff $1 
                 echo "Checked out version: $2"
             else
                 echo "Error : $2 is not a valid version number" 2>&1
@@ -70,12 +70,12 @@ checkout(){
                 exit 1
             fi
         else
-            diff -u $1 .version/$1/lastest  > .version/$1/lastest.diff
-            patch -u $1 .version/$1/lastest.diff
+            diff -u $1 $DIR/.version/$NAME/lastest  > $DIR/.version/$NAME/lastest.diff
+            patch -u $1 $DIR/.version/$NAME/lastest.diff
             echo "Checked out to the latest version"
         fi
     else
-        echo "Error : $1 is not under versioning" 2>&1
+        echo "Error : $NAME is not under versioning" 2>&1
         echo 'Enter "./version.sh --help" for more information.' 2>&1
         exit 1
     fi
