@@ -29,10 +29,10 @@ lastlog(){
     ls $DIR/.version/$NAME | grep -Eo '[0-9]+' | sort -n | tail -1
 }
 differ(){
-    diff -u $DIR/.version/$NAME/lastest $1
+    diff -u $DIR/.version/$NAME.latest $1
 }
 commit(){
-    if [ -d $DIR/.version/$NAME ]
+    if [ -f $DIR/.version/$NAME.latest ]
     then
         #compare $1 with last file
         if cmp $1 $DIR/.version/$NAME/lastest 2>/dev/null
@@ -43,8 +43,8 @@ commit(){
         lastlog=$(lastlog $NAME)
         newlog=$(($lastlog+1))
 
-        diff -u $1 $DIR/.version/$NAME/lastest  > $DIR/.version/$NAME/$newlog.diff
-        cp $1 $DIR/.version/$NAME/lastest
+        diff -u $1 $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog.diff
+        cp $1 $DIR/.version/$NAME.latest
         
         echo "$2" > $DIR/.version/$NAME/$newlog.log
         echo "Committed a new version: $newlog"
