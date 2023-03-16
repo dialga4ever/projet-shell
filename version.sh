@@ -131,6 +131,9 @@ else
         fi
 
 
+        DIR=$(dirname $2)
+        BASE=$(basename $2)
+
         if [ "$1" = "add" ]; then
             add $2 $3
         elif [ "$1" = "rm" ]; then
