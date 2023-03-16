@@ -19,10 +19,10 @@ rm(){
 
 #create a folder .version fi not create in the directory of the file and create a folder with the name of $1 with inital log message
 add() {
-    mkdir -p $DIR.version/$NAME
-    echo "$2" > $DIR.version/$NAME/1.log
-    cp $1 $DIR.version/$NAME/lastest
-    cp $1 $DIR.version/$NAME/original
+    mkdir -p $DIR.version/
+    echo "$2" > $DIR.version/$NAME.log
+    cp $1 $DIR.version/$NAME.latest
+    cp $1 $DIR.version/$NAME.1
 }
 #get the highest number of .version/$1/ number.log
 lastlog(){
