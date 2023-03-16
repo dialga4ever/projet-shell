@@ -7,11 +7,11 @@ rm(){
     then
         echo "Nothing done."
     else
-        rm -rf $DIR.version/$BASE.*
+        rm -rf $DIR/.version/$BASE.*
         #verifier si .version est vide
-        if [ -d $DIR.version ]
+        if [ -d $DIR/.version ]
         then
-            rmdir $DIR.version 2>/dev/null
+            rmdir $DIR/.version 2>/dev/null
         fi
         echo "$1 is not under versioning anymore."
     fi
@@ -19,10 +19,10 @@ rm(){
 
 #create a folder .version fi not create in the directory of the file and create a folder with the name of $1 with inital log message
 add() {
-    mkdir -p $DIR.version/
-    echo "$2" > $DIR.version/$NAME.log
-    cp $1 $DIR.version/$NAME.latest
-    cp $1 $DIR.version/$NAME.1
+    mkdir -p $DIR/.version/
+    echo "$2" > $DIR/.version/$NAME.log
+    cp $1 $DIR/.version/$NAME.latest
+    cp $1 $DIR/.version/$NAME.1
 }
 #get the highest number of .version/$1/ number.log
 lastlog(){
