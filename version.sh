@@ -17,7 +17,7 @@ supr(){
         echo "$1 is not under versioning anymore."
     fi
 }
-
+#oui
 #create a folder .version fi not create in the directory of the file and create a folder with the name of $1 with inital log message
 add() {
     mkdir -p $DIR/.version/
