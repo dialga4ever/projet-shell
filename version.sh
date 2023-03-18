@@ -57,13 +57,26 @@ commit(){
 }
 # patch $1 to the version $2
 checkout(){ 
-    if [ -d $DIR/.version/$NAME ]
+    if [ -f $DIR/.version/$NAME.1 ]
     then
-        if [ $# -eq 3 ]
+        if [ $# -eq 2    ]
         then
-            if [ -f $DIR/.version/$NAME/$2.diff ]
+            echo "$DIR/.version/$NAME.$2"
+            if [ -f $DIR/.version/$NAME.$2 ]
             then
-                patch -u $DIR/.version/$NAME/$2.diff $1 
+
+                #take $NAME.1 as a base and patch utill $NAME.$2
+                cp $DIR/.version/$NAME.1 $1
+
+
+                i=2
+                while [ $i -le $2 ]
+                do
+                    patch -u $NAME $DIR/.version/$NAME.$i
+                    i=$(($i+1))
+                done
+
+
                 echo "Checked out version: $2"
             else
                 echo "Error : $2 is not a valid version number" 2>&1
@@ -71,8 +84,8 @@ checkout(){
                 exit 1
             fi
         else
-            diff -u $1 $DIR/.version/$NAME/lastest  > $DIR/.version/$NAME/lastest.diff
-            patch -u $1 $DIR/.version/$NAME/lastest.diff
+            diff -u $NAME $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.latest.diff
+            patch -u $NAME $DIR/.version/$NAME.latest.diff
             echo "Checked out to the latest version"
         fi
     else
