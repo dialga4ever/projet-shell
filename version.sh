@@ -13,7 +13,7 @@ log(){
 }
 #remove space at the begining and at the end of the string
 normelize(){
-    echo "$1" | sed -E 's/ˆ[[:space:]]//'
+    echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
 
 supr(){
@@ -41,8 +41,8 @@ add() {
         exit 1
     fi
     mkdir -p $DIR/.version/
-    date=$(date -R)
-    echo "$date $2" > $DIR/.version/$NAME.log
+    msg=$(normelize "$1")
+    echo "$date '$msg'" > $DIR/.version/$NAME.log
     cp $1 $DIR/.version/$NAME.latest
     cp $1 $DIR/.version/$NAME.1
 }
@@ -65,11 +65,10 @@ commit(){
         lastlog=$(lastlog)
         newlog=$(($lastlog+1))
 
-        diff -u $1 $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog
-        cp $1 $DIR/.version/$NAME.latest
+        diff -u $NAME $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog
+        cp $NAME $DIR/.version/$NAME.latest
         date=$(date -R)
-        echo "normelize $2"
-        msg=$(normelize "$2")
+        msg=$(normelize "$1")
         echo "$date '$msg'" >> $DIR/.version/$NAME.log
         echo "Committed a new version: $newlog"
     else
@@ -183,11 +182,11 @@ else
         NAME=$(basename $2)
 
         if [ "$1" = "add" ]; then
-            add $2 $3
+            add $3
         elif [ "$1" = "rm" ]; then
             supr  $2
         elif [ "$1" = "commit" ] || [ "$1" = "ci" ]; then
-            commit $2 $3
+            commit "$3"
         elif [ "$1" = "diff" ]; then
             differ $2
         elif [ "$1" = "checkout" ] || [ "$1" = "co" ]; then
