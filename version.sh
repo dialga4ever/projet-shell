@@ -1,6 +1,5 @@
 #!/bin/dash
 
-# show line number lastlog() of $NAME.log
 log(){
     if [ -f $DIR/.version/$NAME.latest ]
     then
@@ -11,7 +10,9 @@ log(){
         exit 1
     fi
 }
-#remove space at the begining and at the end of the string
+
+
+
 normelize(){
     echo "$1" | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'
 }
