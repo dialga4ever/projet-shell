@@ -1,6 +1,20 @@
 #!/bin/dash
 
-
+# show line number lastlog() of $NAME.log
+log(){
+    if [ -f $DIR/.version/$NAME.latest ]
+    then
+        nl -ba -s" : " $DIR/.version/$NAME.log
+    else
+        echo "Error : $NAME is not under versioning" 2>&1
+        echo 'Enter "./version.sh --help" for more information.' 2>&1
+        exit 1
+    fi
+}
+#remove space at the begining and at the end of the string
+normelize(){
+    echo "$1" | sed -E 's/ˆ[[:space:]]//'
+}
 
 supr(){
     read -p "Are you sure you want to delete ’$NAME’ from versioning ? (yes/no) " rep
@@ -20,8 +34,15 @@ supr(){
 #oui
 #create a folder .version fi not create in the directory of the file and create a folder with the name of $1 with inital log message
 add() {
+    if [ -f $DIR/.version/$NAME.1 ]
+    then
+        echo "Error : $NAME is already under versioning" 2>&1
+        echo 'Enter "./version.sh --help" for more information.' 2>&1
+        exit 1
+    fi
     mkdir -p $DIR/.version/
-    echo "$2" > $DIR/.version/$NAME.log
+    date=$(date -R)
+    echo "$date $2" > $DIR/.version/$NAME.log
     cp $1 $DIR/.version/$NAME.latest
     cp $1 $DIR/.version/$NAME.1
 }
@@ -46,8 +67,10 @@ commit(){
 
         diff -u $1 $DIR/.version/$NAME.latest  > $DIR/.version/$NAME.$newlog
         cp $1 $DIR/.version/$NAME.latest
-        
-        echo "$2" >> $DIR/.version/$NAME.log
+        date=$(date -R)
+        echo "normelize $2"
+        msg=$(normelize "$2")
+        echo "$date '$msg'" >> $DIR/.version/$NAME.log
         echo "Committed a new version: $newlog"
     else
         echo "Error : $NAME is not under versioning" 2>&1
@@ -55,24 +78,35 @@ commit(){
         exit 1
     fi
 }
+#show diff beetween last commited version and the $NAME
+show_diff(){
+    if [ -f $DIR/.version/$NAME.latest ]
+    then
+        diff -u $DIR/.version/$NAME.latest $DIR/$NAME
+        
+    else
+        echo "Error : $NAME is not under versioning" 2>&1
+        echo 'Enter "./version.sh --help" for more information.' 2>&1
+        exit 1
+    fi
+}
+
+
 # patch $1 to the version $2
 checkout(){ 
     if [ -f $DIR/.version/$NAME.1 ]
     then
         if [ $# -eq 2    ]
         then
-            echo "$DIR/.version/$NAME.$2"
             if [ -f $DIR/.version/$NAME.$2 ]
             then
-
-                #take $NAME.1 as a base and patch utill $NAME.$2
                 cp $DIR/.version/$NAME.1 $1
 
 
                 i=2
                 while [ $i -le $2 ]
                 do
-                    patch -u $NAME $DIR/.version/$NAME.$i
+                    patch -Ru $NAME $DIR/.version/$NAME.$i 1>/dev/null
                     i=$(($i+1))
                 done
 
@@ -158,9 +192,11 @@ else
             differ $2
         elif [ "$1" = "checkout" ] || [ "$1" = "co" ]; then
             checkout $2 $3
-
+        elif [ "$1" = "diff" ]; then
+            show_diff $2
+        elif [ "$1" = "log" ]; then
+            log $2
         else
-
             echo "Error : "
         fi
     fi
