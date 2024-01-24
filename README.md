@@ -2,7 +2,7 @@
 # Projet shell faire un gestionnaire de version
 
 Le but de ce projet est de réaliser un utilitaire de gestion de versions appelé
-version.sh. Comme son nom l’indique, version.sh est implémenté en langage
+version.sh. Comme son nom l’indique, version.sh implémenté en langage
 shell.
 
 
